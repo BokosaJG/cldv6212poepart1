@@ -1,0 +1,31 @@
+@model IEnumerable<ABCRetails.Models.Product>
+@{ Layout = "~/Views/Shared/_Layout.cshtml"; }
+<h2>Products</h2>
+<a class="btn btn-primary mb-2" href="/Product/Create">Add New Product</a>
+<table class="table table-bordered">
+<thead><tr><th>Name</th><th>Price</th><th>Stock</th><th>Image</th><th>Actions</th></tr></thead>
+<tbody>
+@foreach (var p in Model){
+<tr>
+<td>@p.ProductName</td>
+<td>@p.Price.ToString("C")</td>
+<td>
+<span class="badge bg-@(p.StockAvailable<=0?"danger":p.StockAvailable<10?"warning":"success")">@p.StockAvailable</span>
+</td>
+<td>@if(!string.IsNullOrWhiteSpace(p.ImageUrl)){<img src="@p.ImageUrl" style="height:50px" />}</td>
+<td>
+<form method="get" action="/Product/Edit">
+<input type="hidden" name="partitionKey" value="@p.PartitionKey" />
+<input type="hidden" name="rowKey" value="@p.RowKey" />
+<button class="btn btn-sm btn-warning">Edit</button>
+</form>
+<form method="post" action="/Product/Delete" class="d-inline">
+<input type="hidden" name="partitionKey" value="@p.PartitionKey" />
+<input type="hidden" name="rowKey" value="@p.RowKey" />
+<button class="btn btn-sm btn-danger" onclick="return confirm('Delete?')">Delete</button>
+</form>
+</td>
+</tr>
+}
+</tbody>
+</table>
